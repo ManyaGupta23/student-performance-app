@@ -78,13 +78,13 @@ if len(df) > 0:
 
     with col1:
         fig1, ax1 = plt.subplots()
-        df["gpa"].hist(ax=ax1)
+        df["GPA"].hist(ax=ax1)
         ax1.set_title("GPA Distribution")
         st.pyplot(fig1)
 
     with col2:
         fig2, ax2 = plt.subplots()
-        df["studytime"].hist(ax=ax2)
+        df["StudyTimeWeekly"].hist(ax=ax2)
         ax2.set_title("Study Time Distribution")
         st.pyplot(fig2)
 
@@ -92,13 +92,13 @@ if len(df) > 0:
 
     with col3:
         fig3, ax3 = plt.subplots()
-        df["absences"].hist(ax=ax3)
+        df["Absences"].hist(ax=ax3)
         ax3.set_title("Absences")
         st.pyplot(fig3)
 
     with col4:
         fig4, ax4 = plt.subplots()
-        df["gradeclass"].value_counts().plot(kind="bar", ax=ax4)
+        df["GradeClass"].value_counts().plot(kind="bar", ax=ax4)
         ax4.set_title("Grade Distribution")
         st.pyplot(fig4)
 
@@ -136,17 +136,17 @@ with col2:
 # ---------- INPUT DATA ----------
 input_data = pd.DataFrame({
     "Age":[age],
-    "Gender":[1 if gender=="Male" else 0],
-    "Ethnicity":[1 if ethnicity=="Group 1" else 0],
+    "Gender":[1 if Gender=="Male" else 0],
+    "Ethnicity":[1 if Ethnicity=="Group 1" else 0],
     "ParentalEducation":[parentaleducation],
     "ParentalSupport":[parentalsupport],
     "StudyTimeWeekly":[studytime],
     "Absences":[absences],
-    "Tutoring":[1 if tutoring=="Yes" else 0],
-    "Extracurricular":[1 if extracurricular=="Yes" else 0],
-    "Sports":[1 if sports=="Yes" else 0],
-    "Music":[1 if music=="Yes" else 0],
-    "Volunteering":[1 if volunteering=="Yes" else 0],
+    "Tutoring":[1 if Tutoring=="Yes" else 0],
+    "Extracurricular":[1 if Extracurricular=="Yes" else 0],
+    "Sports":[1 if Sports=="Yes" else 0],
+    "Music":[1 if Music=="Yes" else 0],
+    "Volunteering":[1 if Volunteering=="Yes" else 0],
     "GPA":[gpa]
 })
 
@@ -166,7 +166,7 @@ if st.button("🚀 Predict & Save"):
         st.success(f"🎯 Predicted Grade: {grade}")
 
         # Save
-        input_data["gradeclass"] = pred
+        input_data["GradeClass"] = pred
         df = pd.concat([df, input_data], ignore_index=True)
         df.to_excel(file_name, index=False)
 
