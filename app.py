@@ -55,7 +55,7 @@ else:
 model = None
 if len(df) > 5:
     X = df.drop("GradeClass", axis=1)
-    y = df["gradeclass"]
+    y = df["GradeClass"]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
