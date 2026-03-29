@@ -174,7 +174,7 @@ if st.button("🚀 Predict & Save"):
         st.markdown("## 📊 Result Visualization")
 
         fig5, ax5 = plt.subplots()
-        ax5.bar(["GPA","Study Time","Absences"], [gpa, studytime, absences])
+        ax5.bar(["GPA","Study Time","Absences"], [GPA, StudyTimeWeekly, Absences])
         ax5.set_title("Student Performance Indicators")
         st.pyplot(fig5)
 
