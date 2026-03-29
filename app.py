@@ -139,7 +139,7 @@ input_data = pd.DataFrame({
     "Gender":[1 if Gender=="Male" else 0],
     "Ethnicity":[1 if Ethnicity=="Group 1" else 0],
     "ParentalEducation":[ParentalEducation],
-    "ParentalSupport":[SarentalSupport],
+    "ParentalSupport":[ParentalSupport],
     "StudyTimeWeekly":[StudyTimeWeekly],
     "Absences":[Absences],
     "Tutoring":[1 if Tutoring=="Yes" else 0],
