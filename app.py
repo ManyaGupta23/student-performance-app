@@ -147,7 +147,7 @@ input_data = pd.DataFrame({
     "Sports":[1 if Sports=="Yes" else 0],
     "Music":[1 if Music=="Yes" else 0],
     "Volunteering":[1 if Volunteering=="Yes" else 0],
-    "GPA":[gpa]
+    "GPA":[GPA]
 })
 
 # ---------- PREDICT ----------
