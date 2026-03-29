@@ -1,47 +1,91 @@
 import streamlit as st
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+import matplotlib.pyplot as plt
 
-st.title("🎓 Student Performance Prediction System")
+# ---------- PAGE CONFIG ----------
+st.set_page_config(page_title="Student Performance System", layout="wide")
 
-# Load dataset
-data = pd.read_excel("student_data.xlsx")
-data.columns = data.columns.str.lower()
+# ---------- CUSTOM CSS ----------
+st.markdown("""
+<style>
+.stApp {
+    background: linear-gradient(to right, #eef2f3, #ffffff);
+}
+.title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+</style>
+""", unsafe_allow_html=True)
 
-# Train model
-X = data[['studytimeweekly', 'absences', 'parentalsupport']]
-y = data['gpa']
+# ---------- TITLE ----------
+st.markdown('<p class="title">🎓 Student Performance Prediction System</p>', unsafe_allow_html=True)
 
-model = LinearRegression()
-model.fit(X, y)
+# ---------- FILE UPLOAD ----------
+uploaded_file = st.file_uploader("📤 Upload Student Dataset (Excel)", type=["xlsx"])
 
-# User Inputs
-st.sidebar.header("Enter Student Details")
+if uploaded_file:
 
-studytime = st.sidebar.slider("Study Time (hours/week)", 0.0, 20.0, 5.0)
-absences = st.sidebar.slider("Absences", 0, 30, 5)
-support = st.sidebar.slider("Parental Support (0-5)", 0, 5, 2)
+    df = pd.read_excel(uploaded_file)
 
-# Prediction
-input_data = pd.DataFrame({
-    'studytimeweekly': [studytime],
-    'absences': [absences],
-    'parentalsupport': [support]
-})
+    # Remove ID
+    if "studentid" in df.columns:
+        df = df.drop("studentid", axis=1)
 
-predicted_gpa = model.predict(input_data)[0]
+    if "gradeclass" not in df.columns:
+        st.error("❌ 'gradeclass' column missing!")
+        st.stop()
 
-st.subheader("📊 Prediction Result")
-st.write("Predicted GPA:", round(predicted_gpa, 2))
+    X = df.drop("gradeclass", axis=1)
+    y = df["gradeclass"]
 
-# Risk Level
-if predicted_gpa < 2:
-    st.error("⚠ High Risk")
-elif predicted_gpa < 3:
-    st.warning("⚠ Medium Risk")
-else:
-    st.success("✅ Low Risk")
+    # ---------- PROGRESS BAR ----------
+    progress = st.progress(0)
 
-# Show dataset (optional)
-if st.checkbox("Show Dataset"):
-    st.write(data.head())
+    with st.spinner("⏳ Training model..."):
+        for i in range(100):
+            progress.progress(i + 1)
+
+        model = RandomForestClassifier()
+        model.fit(X, y)
+
+    st.success("✅ Model trained successfully!")
+
+    # ---------- ACCURACY ----------
+    y_pred = model.predict(X)
+    acc = accuracy_score(y, y_pred)
+
+    st.metric("🎯 Model Accuracy", f"{round(acc*100,2)}%")
+
+    # ---------- INPUT FORM ----------
+    st.markdown("## 📝 Enter Student Details")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        age = st.slider("Age", 10, 25)
+        gender = st.selectbox("Gender", ["Male", "Female"])
+        ethnicity = st.selectbox("Ethnicity", ["Group 0", "Group 1"])
+        parentaleducation = st.slider("Parental Education", 0, 4)
+        parentalsupport = st.slider("Parental Support", 0, 4)
+        studytime = st.slider("Study Time (hrs/week)", 0.0, 40.0)
+
+    with col2:
+        absences = st.slider("Absences", 0, 50)
+        tutoring = st.selectbox("Tutoring", ["No", "Yes"])
+        extracurricular = st.selectbox("Extracurricular", ["No", "Yes"])
+        sports = st.selectbox("Sports", ["No", "Yes"])
+        music = st.selectbox("Music", ["No", "Yes"])
+        volunteering = st.selectbox("Volunteering", ["No", "Yes"])
+        gpa = st.slider("GPA", 0.0, 4.0)
+
+    # ---------- INPUT DATA ----------
+    input_data = pd.DataFrame({
+        "age":[age],
+        "gender":[1 if gender=="Male" else 0],
+        "ethnicity":[1 if ethnicity=="Group 1" else 0],
