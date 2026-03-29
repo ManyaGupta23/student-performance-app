@@ -46,15 +46,15 @@ if os.path.exists(file_name):
     df = pd.read_excel(file_name)
 else:
     df = pd.DataFrame(columns=[
-        "age","gender","ethnicity","parentaleducation","parentalsupport",
-        "studytime","absences","tutoring","extracurricular","sports",
-        "music","volunteering","gpa","gradeclass"
+        "Age","Gender","Ethnicity","ParentalEducation","ParentalSupport",
+        "StudyTimeWeekly","Absences","Tutoring","Extracurricular","Sports",
+        "Music","Volunteering","GPA","GradeClass"
     ])
 
 # ---------- MODEL ----------
 model = None
 if len(df) > 5:
-    X = df.drop("gradeclass", axis=1)
+    X = df.drop("GradeClass", axis=1)
     y = df["gradeclass"]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
@@ -117,37 +117,37 @@ st.markdown("## 📝 Enter Student Details")
 col1, col2 = st.columns(2)
 
 with col1:
-    age = st.slider("Age", 10, 25)
-    gender = st.selectbox("Gender", ["Male", "Female"])
-    ethnicity = st.selectbox("Ethnicity", ["Group 0", "Group 1"])
-    parentaleducation = st.slider("Parental Education", 0, 4)
-    parentalsupport = st.slider("Parental Support", 0, 4)
-    studytime = st.slider("Study Time", 0.0, 40.0)
+    Age = st.slider("Age", 10, 25)
+    Gender = st.selectbox("Gender", ["Male", "Female"])
+    Ethnicity = st.selectbox("Ethnicity", ["Group 0", "Group 1"])
+    ParentalEducation = st.slider("Parental Education", 0, 4)
+    ParentalSupport = st.slider("Parental Support", 0, 4)
+    StudyTimeWeekly = st.slider("Study Time", 0.0, 40.0)
 
 with col2:
-    absences = st.slider("Absences", 0, 50)
-    tutoring = st.selectbox("Tutoring", ["No", "Yes"])
-    extracurricular = st.selectbox("Extracurricular", ["No", "Yes"])
-    sports = st.selectbox("Sports", ["No", "Yes"])
-    music = st.selectbox("Music", ["No", "Yes"])
-    volunteering = st.selectbox("Volunteering", ["No", "Yes"])
-    gpa = st.slider("GPA", 0.0, 4.0)
+    Absences = st.slider("Absences", 0, 50)
+    Tutoring = st.selectbox("Tutoring", ["No", "Yes"])
+    Extracurricular = st.selectbox("Extracurricular", ["No", "Yes"])
+    Sports = st.selectbox("Sports", ["No", "Yes"])
+    Music = st.selectbox("Music", ["No", "Yes"])
+    Volunteering = st.selectbox("Volunteering", ["No", "Yes"])
+    GPA = st.slider("GPA", 0.0, 4.0)
 
 # ---------- INPUT DATA ----------
 input_data = pd.DataFrame({
-    "age":[age],
-    "gender":[1 if gender=="Male" else 0],
-    "ethnicity":[1 if ethnicity=="Group 1" else 0],
-    "parentaleducation":[parentaleducation],
-    "parentalsupport":[parentalsupport],
-    "studytime":[studytime],
-    "absences":[absences],
-    "tutoring":[1 if tutoring=="Yes" else 0],
-    "extracurricular":[1 if extracurricular=="Yes" else 0],
-    "sports":[1 if sports=="Yes" else 0],
-    "music":[1 if music=="Yes" else 0],
-    "volunteering":[1 if volunteering=="Yes" else 0],
-    "gpa":[gpa]
+    "Age":[age],
+    "Gender":[1 if gender=="Male" else 0],
+    "Ethnicity":[1 if ethnicity=="Group 1" else 0],
+    "ParentalEducation":[parentaleducation],
+    "ParentalSupport":[parentalsupport],
+    "StudyTimeWeekly":[studytime],
+    "Absences":[absences],
+    "Tutoring":[1 if tutoring=="Yes" else 0],
+    "Extracurricular":[1 if extracurricular=="Yes" else 0],
+    "Sports":[1 if sports=="Yes" else 0],
+    "Music":[1 if music=="Yes" else 0],
+    "Volunteering":[1 if volunteering=="Yes" else 0],
+    "GPA":[gpa]
 })
 
 # ---------- PREDICT ----------
