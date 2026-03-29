@@ -86,6 +86,17 @@ if uploaded_file:
 
     # ---------- INPUT DATA ----------
     input_data = pd.DataFrame({
-        "age":[age],
-        "gender":[1 if gender=="Male" else 0],
-        "ethnicity":[1 if ethnicity=="Group 1" else 0],
+    "age":[age],
+    "gender":[1 if gender=="Male" else 0],
+    "ethnicity":[1 if ethnicity=="Group 1" else 0],
+    "parentaleducation":[parentaleducation],
+    "parentalsupport":[parentalsupport],
+    "studytime":[studytime],
+    "absences":[absences],
+    "tutoring":[1 if tutoring=="Yes" else 0],
+    "extracurricular":[1 if extracurricular=="Yes" else 0],
+    "sports":[1 if sports=="Yes" else 0],
+    "music":[1 if music=="Yes" else 0],
+    "volunteering":[1 if volunteering=="Yes" else 0],
+    "gpa":[gpa]
+})
