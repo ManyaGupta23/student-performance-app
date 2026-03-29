@@ -135,7 +135,7 @@ with col2:
 
 # ---------- INPUT DATA ----------
 input_data = pd.DataFrame({
-    "Age":[age],
+    "Age":[Age],
     "Gender":[1 if Gender=="Male" else 0],
     "Ethnicity":[1 if Ethnicity=="Group 1" else 0],
     "ParentalEducation":[parentaleducation],
