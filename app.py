@@ -88,15 +88,15 @@ file_name="student_data.xlsx"
 if os.path.exists(file_name):
     df = pd.read_excel(file_name)
     df.columns = df.columns.str.strip().str.lower()
-        new_data.columns = new_data.columns.str.strip().str.lower()
-        new_data = new_data.reindex(columns=df.columns, fill_value=0)
-        df = pd.concat([df, new_data], ignore_index=True)
+    new_data.columns = new_data.columns.str.strip().str.lower()
+    new_data = new_data.reindex(columns=df.columns, fill_value=0)
+    df = pd.concat([df, new_data], ignore_index=True)
 else:
     df = new_data
     df.to_excel(file_name, index=False)
     with st.spinner("⏳ Saving..."):
-         time.sleep(1)
-     st.success("🎉 Data Saved Successfully!")
+    time.sleep(1)
+    st.success("🎉 Data Saved Successfully!")
 
 # ---------- DASHBOARD ----------
 if page == "Dashboard":
