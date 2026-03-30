@@ -95,8 +95,8 @@ else:
     df = new_data
     df.to_excel(file_name, index=False)
     with st.spinner("⏳ Saving..."):
-    time.sleep(1)
-    st.success("🎉 Data Saved Successfully!")
+        time.sleep(1)
+         st.success("🎉 Data Saved Successfully!")
 
 # ---------- DASHBOARD ----------
 if page == "Dashboard":
