@@ -2,180 +2,152 @@ import streamlit as st
 import pandas as pd
 import os
 import time
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 
-# ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Student AI System", layout="wide")
 
-# ---------- PREMIUM UI ----------
+# ---------- GLASSMORPHISM UI ----------
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(to right, #dfe9f3, #ffffff);
+    background: linear-gradient(120deg, #89f7fe, #66a6ff);
 }
-.big-title {
-    text-align: center;
-    font-size: 45px;
-    font-weight: bold;
-    color: #2c3e50;
-}
-.card {
+.glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 15px;
-    background-color: white;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
+.title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- LOADING ----------
-progress = st.progress(0)
-for i in range(100):
-    time.sleep(0.01)
-    progress.progress(i+1)
+st.markdown('<p class="title">🎓 Student Performance System</p>', unsafe_allow_html=True)
 
-st.markdown('<p class="big-title">🎓 Student Performance AI System</p>', unsafe_allow_html=True)
-
-# ---------- FILE ----------
 file_name = "student_data.xlsx"
 
-if os.path.exists(file_name):
-    df = pd.read_excel(file_name)
-else:
-    df = pd.DataFrame(columns=[
-        "Age","Gender","Ethnicity","ParentalEducation","ParentalSupport",
-        "StudyTimeWeekly","Absences","Tutoring","Extracurricular","Sports",
-        "Music","Volunteering","GPA","GradeClass"
-    ])
+# ---------- FORM ----------
+with st.form("form"):
 
-# ---------- MODEL ----------
-model = None
-if len(df) > 5:
-    X = df.drop("GradeClass", axis=1)
-    y = df["GradeClass"]
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-    model = RandomForestClassifier(n_estimators=200)
-    model.fit(X_train, y_train)
-
-    y_pred = model.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
-
-    colA, colB, colC = st.columns(3)
-    colA.metric("📊 Records", len(df))
-    colB.metric("🎯 Accuracy", f"{round(acc*100,2)}%")
-    colC.metric("📈 Features", len(X.columns))
-
-# ---------- DASHBOARD ----------
-if len(df) > 0:
-    st.markdown("## 📊 Advanced Dashboard")
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
+    st.markdown("### 📝 Enter Student Details")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        fig1, ax1 = plt.subplots()
-        df["GPA"].hist(ax=ax1)
-        ax1.set_title("GPA Distribution")
-        st.pyplot(fig1)
+        Age = st.number_input("Age", 10, 25)
+        Gender = st.selectbox("Gender", ["Select","Male","Female"])
+        Ethnicity = st.selectbox("Ethnicity", ["Select","Group 0","Group 1"])
+        ParentalEducation = st.number_input("Parental Education", 0, 4)
+        ParentalSupport = st.number_input("Parental Support", 0, 4)
+        StudyTimeWeekly = st.number_input("Study Time", 0.0, 40.0)
 
     with col2:
-        fig2, ax2 = plt.subplots()
-        df["StudyTimeWeekly"].hist(ax=ax2)
-        ax2.set_title("Study Time Distribution")
-        st.pyplot(fig2)
+        Absences = st.number_input("Absences", 0, 50)
+        Tutoring = st.selectbox("Tutoring", ["Select","No","Yes"])
+        Extracurricular = st.selectbox("Extracurricular", ["Select","No","Yes"])
+        Sports = st.selectbox("Sports", ["Select","No","Yes"])
+        Music = st.selectbox("Music", ["Select","No","Yes"])
+        Volunteering = st.selectbox("Volunteering", ["Select","No","Yes"])
+        GPA = st.number_input("GPA", 0.0, 4.0)
 
-    col3, col4 = st.columns(2)
+    submit = st.form_submit_button("🚀 Submit")
 
-    with col3:
-        fig3, ax3 = plt.subplots()
-        df["Absences"].hist(ax=ax3)
-        ax3.set_title("Absences")
-        st.pyplot(fig3)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    with col4:
-        fig4, ax4 = plt.subplots()
-        df["GradeClass"].value_counts().plot(kind="bar", ax=ax4)
-        ax4.set_title("Grade Distribution")
-        st.pyplot(fig4)
+# ---------- SAVE ----------
+if submit:
 
-# ---------- DOWNLOAD ----------
-if len(df) > 0:
-    st.download_button(
-        label="📥 Download Dataset",
-        data=df.to_csv(index=False),
-        file_name="student_data.csv",
-        mime="text/csv"
-    )
-
-# ---------- INPUT FORM ----------
-st.markdown("## 📝 Enter Student Details")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    Age = st.slider("Age", 10, 25)
-    Gender = st.selectbox("Gender", ["Male", "Female"])
-    Ethnicity = st.selectbox("Ethnicity", ["Group 0", "Group 1"])
-    ParentalEducation = st.slider("Parental Education", 0, 4)
-    ParentalSupport = st.slider("Parental Support", 0, 4)
-    StudyTimeWeekly = st.slider("Study Time", 0.0, 40.0)
-
-with col2:
-    Absences = st.slider("Absences", 0, 50)
-    Tutoring = st.selectbox("Tutoring", ["No", "Yes"])
-    Extracurricular = st.selectbox("Extracurricular", ["No", "Yes"])
-    Sports = st.selectbox("Sports", ["No", "Yes"])
-    Music = st.selectbox("Music", ["No", "Yes"])
-    Volunteering = st.selectbox("Volunteering", ["No", "Yes"])
-    GPA = st.slider("GPA", 0.0, 4.0)
-
-# ---------- INPUT DATA ----------
-input_data = pd.DataFrame({
-    "Age":[Age],
-    "Gender":[1 if Gender=="Male" else 0],
-    "Ethnicity":[1 if Ethnicity=="Group 1" else 0],
-    "ParentalEducation":[ParentalEducation],
-    "ParentalSupport":[ParentalSupport],
-    "StudyTimeWeekly":[StudyTimeWeekly],
-    "Absences":[Absences],
-    "Tutoring":[1 if Tutoring=="Yes" else 0],
-    "Extracurricular":[1 if Extracurricular=="Yes" else 0],
-    "Sports":[1 if Sports=="Yes" else 0],
-    "Music":[1 if Music=="Yes" else 0],
-    "Volunteering":[1 if Volunteering=="Yes" else 0],
-    "GPA":[GPA]
-})
-
-# ---------- PREDICT ----------
-if st.button("🚀 Predict & Save"):
-
-    if model is None:
-        st.error("❌ Not enough data to train model")
+    if "Select" in [Gender, Ethnicity, Tutoring, Extracurricular, Sports, Music, Volunteering]:
+        st.error("❌ Fill all fields!")
     else:
-        input_data = input_data.reindex(columns=X.columns, fill_value=0)
+        new_data = pd.DataFrame({
+            "age":[Age],
+            "gender":[1 if Gender=="Male" else 0],
+            "ethnicity":[1 if Ethnicity=="Group 1" else 0],
+            "parentaleducation":[ParentalEducation],
+            "parentalsupport":[ParentalSupport],
+            "studytime":[StudyTimeWeekly],
+            "absences":[Absences],
+            "tutoring":[1 if Tutoring=="Yes" else 0],
+            "extracurricular":[1 if Extracurricular=="Yes" else 0],
+            "sports":[1 if Sports=="Yes" else 0],
+            "music":[1 if Music=="Yes" else 0],
+            "volunteering":[1 if Volunteering=="Yes" else 0],
+            "gpa":[GPA]
+        })
+         file_name="student_data.xlsx"
+        if os.path.exists(file_name):
+            df = pd.read_excel(file_name)
+            df = pd.concat([df, new_data], ignore_index=True)
+        else:
+            df = new_data
 
-        pred = model.predict(input_data)[0]
-
-        grade_map = {4:"A",3:"B",2:"C",1:"D",0:"F"}
-        grade = grade_map[pred]
-
-        st.success(f"🎯 Predicted Grade: {grade}")
-
-        # Save
-        input_data["GradeClass"] = pred
-        df = pd.concat([df, input_data], ignore_index=True)
         df.to_excel(file_name, index=False)
 
-        # ---------- RESULT GRAPH ----------
-        st.markdown("## 📊 Result Visualization")
+        with st.spinner("⏳ Saving..."):
+            time.sleep(1)
 
-        fig5, ax5 = plt.subplots()
-        ax5.bar(["GPA","Study Time","Absences"], [GPA, StudyTimeWeekly, Absences])
-        ax5.set_title("Student Performance Indicators")
-        st.pyplot(fig5)
+        st.success("🎉 Data Saved Successfully!")
 
-        st.success("🙏 Thank You! Keep Growing 🚀")
+# ---------- DASHBOARD ----------
+if os.path.exists(file_name):
+    df = pd.read_excel(file_name)
+
+    if len(df) > 0:
+
+        st.markdown("## 📊 Dashboard")
+
+        col1, col2, col3 = st.columns(3)
+        col1.metric("👨‍🎓 Students", len(df))
+        col2.metric("📘 Avg GPA", round(df["GPA"].mean(),2))
+        col3.metric("📉 Avg Absences", round(df["Absences"].mean(),2))
+
+        # ---------- PIE CHART ----------
+        st.markdown("### 📊 Gender Distribution")
+        fig1, ax1 = plt.subplots()
+        df["Gender"].value_counts().plot(kind="pie", autopct='%1.1f%%', ax=ax1)
+        st.pyplot(fig1)
+
+        # ---------- BAR CHART ----------
+        st.markdown("### 📈 Grade Distribution")
+        if "GradeClass" in df.columns:
+            fig2, ax2 = plt.subplots()
+            df["GradeClass"].value_counts().plot(kind="bar", ax=ax2)
+            st.pyplot(fig2)
+
+        # ---------- HISTOGRAM ----------
+        st.markdown("### 📉 GPA Distribution")
+        fig3, ax3 = plt.subplots()
+        df["GPA"].hist(ax=ax3)
+        st.pyplot(fig3)
+
+        # ---------- PROFILE ----------
+        st.markdown("### 🧑‍🎓 Latest Student")
+
+        last = df.iloc[-1]
+
+        st.markdown(f"""
+        <div class="glass">
+        <h3>Student Profile</h3>
+        <p><b>Age:</b> {last['Age']}</p>
+        <p><b>Gender:</b> {'Male' if last['Gender']==1 else 'Female'}</p>
+        <p><b>GPA:</b> {last['GPA']}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ---------- DOWNLOAD ----------
+        st.download_button(
+            "📥 Download Data",
+            df.to_csv(index=False),
+            "student_data.csv",
+            "text/csv"
+        )
+
+        st.success("🙏 Thank You! Keep Learning 🚀")
