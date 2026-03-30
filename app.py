@@ -2,152 +2,172 @@ import streamlit as st
 import pandas as pd
 import os
 import time
-import matplotlib.pyplot as plt
+import plotly.express as px
 
-st.set_page_config(page_title="Student AI System", layout="wide")
+# ---------- PAGE CONFIG ----------
+st.set_page_config(page_title="Student Intelligence System", layout="wide")
 
-# ---------- GLASSMORPHISM UI ----------
+# ---------- PREMIUM UI ----------
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(120deg, #89f7fe, #66a6ff);
-}
-.glass {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
-}
-.title {
-    text-align: center;
-    font-size: 42px;
-    font-weight: bold;
+    background: linear-gradient(to right, #667eea, #764ba2);
     color: white;
+}
+.block-container {
+    padding-top: 1rem;
 }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<p class="title">🎓 Student Performance System</p>', unsafe_allow_html=True)
+# ---------- NAVIGATION ----------
+page = st.sidebar.radio("📌 Navigation", ["Home","Data Entry","Dashboard","Insights"])
 
 file_name = "student_data.xlsx"
 
-# ---------- FORM ----------
-with st.form("form"):
+# ---------- HOME ----------
+if page == "Home":
+    st.title("🎓 Student Intelligence System")
+    st.markdown("""
+    ### 🚀 Features:
+    - Data Entry System  
+    - Excel Storage  
+    - AI Insights  
+    - Interactive Dashboard  
+    """)
+    st.image("https://cdn-icons-png.flaticon.com/512/3135/3135755.png", width=200)
 
-    st.markdown('<div class="glass">', unsafe_allow_html=True)
-    st.markdown("### 📝 Enter Student Details")
+# ---------- DATA ENTRY ----------
+if page == "Data Entry":
 
-    col1, col2 = st.columns(2)
+    with st.form("form"):
+        st.subheader("📝 Enter Student Details")
 
-    with col1:
-        Age = st.number_input("Age", 10, 25)
-        Gender = st.selectbox("Gender", ["Select","Male","Female"])
-        Ethnicity = st.selectbox("Ethnicity", ["Select","Group 0","Group 1"])
-        ParentalEducation = st.number_input("Parental Education", 0, 4)
-        ParentalSupport = st.number_input("Parental Support", 0, 4)
-        StudyTimeWeekly = st.number_input("Study Time", 0.0, 40.0)
+        col1, col2 = st.columns(2)
 
-    with col2:
-        Absences = st.number_input("Absences", 0, 50)
-        Tutoring = st.selectbox("Tutoring", ["Select","No","Yes"])
-        Extracurricular = st.selectbox("Extracurricular", ["Select","No","Yes"])
-        Sports = st.selectbox("Sports", ["Select","No","Yes"])
-        Music = st.selectbox("Music", ["Select","No","Yes"])
-        Volunteering = st.selectbox("Volunteering", ["Select","No","Yes"])
-        GPA = st.number_input("GPA", 0.0, 4.0)
+        with col1:
+            Age = st.number_input("Age", 10, 25)
+            Gender = st.selectbox("Gender", ["Select","Male","Female"])
+            Ethnicity = st.selectbox("Ethnicity", ["Select","Group 0","Group 1"])
+            ParentalEducation = st.number_input("Parental Education", 0, 4)
+            ParentalSupport = st.number_input("Parental Support", 0, 4)
+            StudyTimeWeekly = st.number_input("Study Time", 0.0, 40.0)
 
-    submit = st.form_submit_button("🚀 Submit")
+        with col2:
+            Absences = st.number_input("Absences", 0, 50)
+            Tutoring = st.selectbox("Tutoring", ["Select","No","Yes"])
+            Extracurricular = st.selectbox("Extracurricular", ["Select","No","Yes"])
+            Sports = st.selectbox("Sports", ["Select","No","Yes"])
+            Music = st.selectbox("Music", ["Select","No","Yes"])
+            Volunteering = st.selectbox("Volunteering", ["Select","No","Yes"])
+            GPA = st.number_input("GPA", 0.0, 4.0)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+        submit = st.form_submit_button("🚀 Submit")
 
-# ---------- SAVE ----------
-if submit:
+    if submit:
 
-    if "Select" in [Gender, Ethnicity, Tutoring, Extracurricular, Sports, Music, Volunteering]:
-        st.error("❌ Fill all fields!")
-    else:
-        new_data = pd.DataFrame({
-            "age":[Age],
-            "gender":[1 if Gender=="Male" else 0],
-            "ethnicity":[1 if Ethnicity=="Group 1" else 0],
-            "parentaleducation":[ParentalEducation],
-            "parentalsupport":[ParentalSupport],
-            "studytime":[StudyTimeWeekly],
-            "absences":[Absences],
-            "tutoring":[1 if Tutoring=="Yes" else 0],
-            "extracurricular":[1 if Extracurricular=="Yes" else 0],
-            "sports":[1 if Sports=="Yes" else 0],
-            "music":[1 if Music=="Yes" else 0],
-            "volunteering":[1 if Volunteering=="Yes" else 0],
-            "gpa":[GPA]
-        })
-        file_name="student_data.xlsx"
-        if os.path.exists(file_name):
-            df = pd.read_excel(file_name)
-            df = pd.concat([df, new_data], ignore_index=True)
+        if "Select" in [Gender, Ethnicity, Tutoring, Extracurricular, Sports, Music, Volunteering]:
+            st.error("❌ Fill all fields!")
         else:
-            df = new_data
+            new_data = pd.DataFrame({
+                "age":[Age],
+                "gender":[1 if Gender=="Male" else 0],
+                "ethnicity":[1 if Ethnicity=="Group 1" else 0],
+                "parentaleducation":[ParentalEducation],
+                "parentalsupport":[ParentalSupport],
+                "studytime":[StudyTimeWeekly],
+                "absences":[Absences],
+                "tutoring":[1 if Tutoring=="Yes" else 0],
+                "extracurricular":[1 if Extracurricular=="Yes" else 0],
+                "sports":[1 if Sports=="Yes" else 0],
+                "music":[1 if Music=="Yes" else 0],
+                "volunteering":[1 if Volunteering=="Yes" else 0],
+                "gpa":[GPA]
+            })
+file_name="student_data.xlsx"
+            if os.path.exists(file_name):
+                df = pd.read_excel(file_name)
 
-        df.to_excel(file_name, index=False)
+                df.columns = df.columns.str.strip().str.lower()
+                new_data.columns = new_data.columns.str.strip().str.lower()
 
-        with st.spinner("⏳ Saving..."):
-            time.sleep(1)
+                new_data = new_data.reindex(columns=df.columns, fill_value=0)
 
-        st.success("🎉 Data Saved Successfully!")
+                df = pd.concat([df, new_data], ignore_index=True)
+            else:
+                df = new_data
+
+            df.to_excel(file_name, index=False)
+
+            with st.spinner("⏳ Saving..."):
+                time.sleep(1)
+
+            st.success("🎉 Data Saved Successfully!")
 
 # ---------- DASHBOARD ----------
-if os.path.exists(file_name):
-    df = pd.read_excel(file_name)
+if page == "Dashboard":
 
-    if len(df) > 0:
+    if os.path.exists(file_name):
+        df = pd.read_excel(file_name)
 
-        st.markdown("## 📊 Dashboard")
+        st.subheader("📊 Dashboard")
 
         col1, col2, col3 = st.columns(3)
         col1.metric("👨‍🎓 Students", len(df))
         col2.metric("📘 Avg GPA", round(df["GPA"].mean(),2))
         col3.metric("📉 Avg Absences", round(df["Absences"].mean(),2))
 
-        # ---------- PIE CHART ----------
-        st.markdown("### 📊 Gender Distribution")
-        fig1, ax1 = plt.subplots()
-        df["Gender"].value_counts().plot(kind="pie", autopct='%1.1f%%', ax=ax1)
-        st.pyplot(fig1)
+        # ---------- INTERACTIVE CHARTS ----------
+        st.subheader("📊 GPA Distribution")
+        fig = px.histogram(df, x="GPA")
+        st.plotly_chart(fig, use_container_width=True)
 
-        # ---------- BAR CHART ----------
-        st.markdown("### 📈 Grade Distribution")
+        st.subheader("📊 Gender Distribution")
+        fig2 = px.pie(df, names="Gender")
+        st.plotly_chart(fig2, use_container_width=True)
+
         if "GradeClass" in df.columns:
-            fig2, ax2 = plt.subplots()
-            df["GradeClass"].value_counts().plot(kind="bar", ax=ax2)
-            st.pyplot(fig2)
+            st.subheader("📈 Grade Distribution")
+            fig3 = px.bar(df, x="GradeClass")
+            st.plotly_chart(fig3, use_container_width=True)
 
-        # ---------- HISTOGRAM ----------
-        st.markdown("### 📉 GPA Distribution")
-        fig3, ax3 = plt.subplots()
-        df["GPA"].hist(ax=ax3)
-        st.pyplot(fig3)
+        st.subheader("🔥 Correlation Heatmap")
+        fig4 = px.imshow(df.corr(), text_auto=True)
+        st.plotly_chart(fig4, use_container_width=True)
 
-        # ---------- PROFILE ----------
-        st.markdown("### 🧑‍🎓 Latest Student")
+        st.download_button("📥 Download Data", df.to_csv(index=False), "student_data.csv")
+
+# ---------- INSIGHTS ----------
+if page == "Insights":
+
+    if os.path.exists(file_name):
+        df = pd.read_excel(file_name)
 
         last = df.iloc[-1]
 
-        st.markdown(f"""
-        <div class="glass">
-        <h3>Student Profile</h3>
-        <p><b>Age:</b> {last['Age']}</p>
-        <p><b>Gender:</b> {'Male' if last['Gender']==1 else 'Female'}</p>
-        <p><b>GPA:</b> {last['GPA']}</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.subheader("🤖 AI Insights")
 
-        # ---------- DOWNLOAD ----------
-        st.download_button(
-            "📥 Download Data",
-            df.to_csv(index=False),
-            "student_data.csv",
-            "text/csv"
+        if last["GPA"] < 2:
+            st.error("⚠ At Risk Student")
+        elif last["GPA"] < 3:
+            st.warning("📉 Needs Improvement")
+        else:
+            st.success("🌟 Excellent Student")
+
+        if last["Absences"] > 10:
+            st.warning("📅 High Absences")
+
+        if last["StudyTimeWeekly"] < 10:
+            st.info("⏳ Increase Study Time")
+
+        # ---------- COMPARISON ----------
+        st.subheader("📈 Performance Comparison")
+
+        fig = px.bar(
+            x=["Student GPA","Average GPA"],
+            y=[last["GPA"], df["GPA"].mean()]
         )
+
+        st.plotly_chart(fig, use_container_width=True)
 
         st.success("🙏 Thank You! Keep Learning 🚀")
