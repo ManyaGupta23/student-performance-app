@@ -82,7 +82,7 @@ if submit:
             "volunteering":[1 if Volunteering=="Yes" else 0],
             "gpa":[GPA]
         })
-         file_name="student_data.xlsx"
+        file_name="student_data.xlsx"
         if os.path.exists(file_name):
             df = pd.read_excel(file_name)
             df = pd.concat([df, new_data], ignore_index=True)
