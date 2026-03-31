@@ -1,3 +1,4 @@
+import io
 import streamlit as st
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
@@ -118,7 +119,6 @@ elif menu == "Prediction":
         st.session_state.history = pd.concat([st.session_state.history, pd.DataFrame([new_entry])], ignore_index=True)
 
         # Download prediction
-         import io
             # 1. Convert your dictionary into a DataFrame
             df_to_download = pd.DataFrame([new_entry])
 
