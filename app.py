@@ -145,4 +145,21 @@ elif menu == "Insights":
     st.metric("Average Absences", round(df['Absences'].mean(),2))
 
 # --- PREDICTION HISTORY ---
-elif menu == "Prediction History
+elif menu == "Prediction History":
+    st.subheader("📝 Prediction History")
+    if st.session_state.history.empty:
+        st.info("No predictions made yet!")
+    else:
+        st.dataframe(st.session_state.history)
+        
+        # Proper Excel download
+        from io import BytesIO
+        to_download = BytesIO()
+        st.session_state.history.to_excel(to_download, index=False)
+        to_download.seek(0)
+        st.download_button(
+            label="📥 Download Full Prediction History",
+            data=to_download,
+            file_name="prediction_history.xlsx",
+            mime="application/vnd.ms-excel"
+        )
