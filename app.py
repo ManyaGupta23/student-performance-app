@@ -118,13 +118,25 @@ elif menu == "Prediction":
         st.session_state.history = pd.concat([st.session_state.history, pd.DataFrame([new_entry])], ignore_index=True)
 
         # Download prediction
-        st.download_button(
-            label="📥 Download This Prediction as Excel",
-            data=pd.DataFrame([new_entry]).to_excel(index=False),
-            file_name="student_prediction.xlsx",
-            mime="application/vnd.ms-excel"
-        )
+       import io
 
+# 1. Convert your dictionary into a DataFrame
+df_to_download = pd.DataFrame([new_entry])
+
+# 2. Create a memory buffer (a "virtual file")
+buffer = io.BytesIO()
+
+# 3. Write the Excel data into that virtual file
+with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+    df_to_download.to_excel(writer, index=False, sheet_name='Prediction')
+
+# 4. Provide the data to the Streamlit button
+st.download_button(
+    label="👉 Download This Prediction as Excel",
+    data=buffer.getvalue(), # This gets the actual data out of the buffer
+    file_name="student_prediction.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
 # --- INSIGHTS ---
 elif menu == "Insights":
     st.subheader("📊 Dataset Insights")
