@@ -119,7 +119,6 @@ elif menu == "Prediction":
 
         # Download prediction
        import io
-
 # 1. Convert your dictionary into a DataFrame
 df_to_download = pd.DataFrame([new_entry])
 
